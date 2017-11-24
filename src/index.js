@@ -19,13 +19,13 @@ function isAllTrue(array, fn) {
 		throw new Error('fn is not a function');
 	}
 
-	for (var i=0, a=0; i<array.length; i++) {
+	for (var i = 0, a = 0; i<array.length; i++) {
 		if (fn(array[i])) {
 			a++;
 		}
 	}
 
-	if (a===array.length) {
+	if (a === array.length) {
 		return true;
 	} else {
 		return false;
@@ -52,12 +52,12 @@ function isSomeTrue(array, fn) {
 	}
 
 	for (var i = 0, a = 0; i < array.length; i++) {
-		if(fn(array[i])){
+		if (fn(array[i])){
 			a++;
 		}
 	}
 
-	if (a>0) return true;
+	if (a > 0) return true;
 	    else return false;
 }
 
@@ -77,7 +77,7 @@ function returnBadArguments(fn) {
 		throw new Error('fn is not a function');
 	}
 	
-	for (var i=0; i<Args.length; i++) {
+	for (var i = 0; i < Args.length; i++) {
 		try {
 			fn(Args[i]);
 		}
@@ -135,7 +135,7 @@ function calculator(number=0) {
 				throw new Error('division by 0');
 			}
 
-            number/=arguments[i];
+            number /= arguments[i];
 		}
 
 		return number;
@@ -144,7 +144,7 @@ function calculator(number=0) {
 	mul : function() {
 
 		for (var i = 0; i<arguments.length; i++) {
-            number*=arguments[i];
+            number *= arguments[i];
 		}
 
 		return number;
