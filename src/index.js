@@ -5,9 +5,11 @@
  Напишите аналог встроенного метода forEach для работы с массивами
  */
 function forEach(array, fn) {
-	for (var i = 0; i < array.length; i++) {
-		fn(array[i], i, array);
+
+	for (var i = 0; i < array.length; i++) {     // Expected indentation of 4 spaces but found 1 tab    и   Unexpected tab character   и Multiple spaces found before
+		fn(array[i], i, array);                  // Expected indentation of 8 spaces but found 2 tabs
 	}
+
 }
 
 /*
@@ -68,7 +70,7 @@ function hasProperty(obj, prop) {
 function getEnumProps(obj) {
     var array = [];
 
-    for (var key in obj) {
+    for (var key in obj) {                      //The body of a for-in should be wrapped in an if statement to filter unwanted properties from the prototype
         array.push(key);
     }
 
@@ -105,7 +107,7 @@ function slice(array, from, to) {
     }
     
     if ( begin < 0) {
-    	var b = array.length*-1;
+    	var b = array.length*-1;            // Mixed spaces and tabs
 
     	if (begin > b) {
     		begin = array.length + from;
@@ -128,8 +130,7 @@ function slice(array, from, to) {
 
         return newArray;
 
-    } else {
-        console.log(begin, end);
+    } else {                             // Unnecessary 'else' after 'return'
 
         for ( i = begin; i < end; i++ ) {
             newArray.push( array[i] );
