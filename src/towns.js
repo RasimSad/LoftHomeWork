@@ -42,23 +42,32 @@ function loadTowns() {
     xhr.send();
     xhr.responseType = 'json';
     xhr.addEventListener('load', () => {
-      if (xhr.status === 404) {
-        reject();
-      } else {
-        resolve(xhr.response.sort(function(a, b) {
-          if (a.name > b.name) {
-            return 1;
-          }
-          if (a.name < b.name) {
-            return -1;
-          }
-          return 0;
-        }));
-      }
-    });
+        if (xhr.status === 404) {
+          reject();
+        } else {
+          resolve(xhr.response.sort(function(a, b) {
+            if (a.name > b.name) {
+              return 1;
+            }
+            if (a.name < b.name) {
+              return -1;
+            }
+            return 0;
+          }));
+        }
+      },
+      () => {
+        var button = document.createElement('button');
+        loadingBlock.style.display = 'none';
+        button.innerHTML = "Загрузить";
+        homeworkContainer.appendChild(button);
+        button.addEventListener('click', function() {
+          load();
+        })
+
+      });
   });
 }
-
 /**
  * Функция должна проверять встречается ли подстрока chunk в строке full
  * Проверка должна происходить без учета регистра символов

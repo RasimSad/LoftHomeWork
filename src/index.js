@@ -7,6 +7,7 @@
  * @return {Promise}
  */
 function delayPromise(seconds) {
+	seconds *=1000;
 	return new Promise(function(resolve) {
 		setTimeout(() => {
 			resolve();
