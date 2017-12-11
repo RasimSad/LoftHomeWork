@@ -55,16 +55,6 @@ function loadTowns() {
             return 0;
           }));
         }
-      },
-      () => {
-        var button = document.createElement('button');
-        loadingBlock.style.display = 'none';
-        button.innerHTML = "Загрузить";
-        homeworkContainer.appendChild(button);
-        button.addEventListener('click', function() {
-          load();
-        })
-
       });
   });
 }
@@ -110,7 +100,17 @@ loadTowns()
       }
     });
 
-  });
+  },
+      () => {
+        var button = document.createElement('button');
+        loadingBlock.style.display = 'none';
+        button.innerHTML = "Загрузить";
+        homeworkContainer.appendChild(button);
+        button.addEventListener('click', function() {
+          load();
+        })
+
+      });
 
 export {
   loadTowns,
