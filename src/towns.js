@@ -85,22 +85,23 @@ let filterInput = homeworkContainer.querySelector('#filter-input');
 let filterResult = homeworkContainer.querySelector('#filter-result');
 let townsPromise;
 
-loadTowns()
-  .then((city) => {
-    loadingBlock.style.display = 'none';
-    filterBlock.style.display = 'block';
-    filterInput.addEventListener('keyup', function() {
-      filterResult.innerText = '';
-      if (filterInput.value.length > 0) {
-        for (var i = 0; i < city.length; i++) {
-          if (isMatching(city[i].name, filterInput.value)) {
-            filterResult.innerHTML += city[i].name + '<br>';
+function load() {
+  loadTowns()
+    .then((city) => {
+        loadingBlock.style.display = 'none';
+        filterBlock.style.display = 'block';
+        filterInput.addEventListener('keyup', function() {
+          filterResult.innerText = '';
+          if (filterInput.value.length > 0) {
+            for (var i = 0; i < city.length; i++) {
+              if (isMatching(city[i].name, filterInput.value)) {
+                filterResult.innerHTML += city[i].name + '<br>';
+              }
+            }
           }
-        }
-      }
-    });
+        });
 
-  },
+      },
       () => {
         var button = document.createElement('button');
         loadingBlock.style.display = 'none';
@@ -111,7 +112,7 @@ loadTowns()
         })
 
       });
-
+}
 export {
   loadTowns,
   isMatching
