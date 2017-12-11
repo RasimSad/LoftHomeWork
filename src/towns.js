@@ -84,8 +84,9 @@ let filterBlock = homeworkContainer.querySelector('#filter-block');
 let filterInput = homeworkContainer.querySelector('#filter-input');
 let filterResult = homeworkContainer.querySelector('#filter-result');
 let townsPromise;
-
+//load();
 function load() {
+
   loadTowns()
     .then((city) => {
         loadingBlock.style.display = 'none';
@@ -103,16 +104,17 @@ function load() {
 
       },
       () => {
-        var button = document.createElement('button');
         loadingBlock.style.display = 'none';
+        var button = document.createElement('button');
         button.innerHTML = "Загрузить";
         homeworkContainer.appendChild(button);
         button.addEventListener('click', function() {
           load();
+          homeworkContainer.removeChild(button);
         })
-
       });
 }
+load();
 export {
   loadTowns,
   isMatching
