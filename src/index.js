@@ -1,87 +1,51 @@
-/* ДЗ 5 - DOM Events */
+/* ДЗ 6.1 - Асинхронность и работа с сетью */
 
 /**
- * Функция должна добавлять обработчик fn события eventName к элементу target
+ * Функция должна создавать Promise, который должен быть resolved через seconds секунду после создания
  *
- * @param {string} eventName - имя события, на которое нужно добавить обработчик
- * @param {Element} target - элемент, на который нужно добавить обработчик
- * @param {function} fn - обработчик
+ * @param {number} seconds - количество секунд, через которое Promise должен быть resolved
+ * @return {Promise}
  */
-function addListener(eventName, target, fn) {
-    target.addEventListener('click', fn);
+function delayPromise(seconds) {
+	return new Promise(function(resolve) {
+		setTimeout(() => {
+			resolve();
+		}, seconds);
+
+	});
 }
 
 /**
- * Функция должна удалять обработчик fn события eventName у элемента target
+ * Функция должна вернуть Promise, который должен быть разрешен массивом городов, загруженным из
+ * https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
+ * Элементы полученного массива должны быть отсортированы по имени города
  *
- * @param {string} eventName - имя события, для которого нужно удалить обработчик
- * @param {Element} target - элемент, у которого нужно удалить обработчик
- * @param {function} fn - обработчик
+ * @return {Promise<Array<{name: String}>>}
  */
-function removeListener(eventName, target, fn) {
-    target.removeEventListener(eventName, fn);
-
+function loadAndSortTowns() {
+	return new Promise((resolve, reject) => {
+		const xhr = new XMLHttpRequest();
+		xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
+		xhr.send();
+		xhr.responseType = 'json';
+		xhr.addEventListener('load', () => {
+			if (xhr.status === 404) {
+				reject();
+			} else {
+				resolve(xhr.response.sort(function(a, b) {
+					if (a.name > b.name) {
+						return 1;
+					}
+					if (a.name < b.name) {
+						return -1;
+					}
+					return 0;
+				}));
+			}
+		});
+	});
 }
-
-/**
- * Функция должна добавлять к target обработчик события eventName, который должен отменять действие по умолчанию
- *
- * @param {string} eventName - имя события, для которого нужно удалить обработчик
- * @param {Element} target - элемент, на который нужно добавить обработчик
- */
-function skipDefault(eventName, target) {
-    target.addEventListener(eventName, (e) => {
-        e.preventDefault();
-    });
-}
-
-/**
- * Функция должна эмулировать событие click для элемента target
- *
- * @param {Element} target - элемент, на который нужно добавить обработчик
- */
-function emulateClick(target) {
-
-    var newClick = new CustomEvent('click');
-    target.dispatchEvent(newClick);
-}
-
-/**
- * Функция должна добавить такой обработчик кликов к элементу target
- * который реагирует (вызывает fn) только на клики по элементам BUTTON внутри target
- *в
- * @param {Element} target - элемент, на который нужно добавить обработчик
- * @param {function} fn - функция, которую нужно вызвать при клике на элемент BUTTON внутри target
- */
-
-function delegate(target, fn) {
-    target.addEventListener('click', (event) => {
-        if (event.target.tagName === 'BUTTON') {
-        fn();
-        }
-    })
-}
-/**
- * *** Со звездочкой ***
- * Функция должна добавить такой обработчик кликов к элементу target
- * который сработает только один раз и удалится
- * Постарайтесь не создавать глобальных переменных
- *
- * @param {Element} target - элемент, на который нужно добавить обработчик
- * @param {function} fn - обработчик
- */
-function once(target, fn) {
-    target.addEventListener('click', fn);
-    target.addEventListener('click', function() {
-        target.removeEventListener('click', fn);
-    });
-}
-
 export {
-  addListener,
-  removeListener,
-  skipDefault,
-  emulateClick,
-  delegate,
-  once
+    delayPromise,
+    loadAndSortTowns
 };
