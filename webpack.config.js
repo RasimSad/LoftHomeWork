@@ -7,19 +7,19 @@ let path = require('path');
 
 loaders.push({
     test: /\.css$/,
-    loader: ExtractTextPlugin.extract({
-        fallbackLoader: 'style-loader',
-        loader: 'css-loader'
+    use: ExtractTextPlugin.extract({ // correct
+        fallback: 'style-loader', // correct
+        use: 'css-loader' // correct
     })
 });
 
 module.exports = {
     entry: {
         main: './src/index.js',
-        townss: './src/towns.js'
+        cookie: './src/cookie.js'
     },
     output: {
-        filename: '[hash].js',
+        filename: '[name].[hash].js',
         path: path.resolve('dist')
     },
     devtool: 'source-map',
@@ -27,12 +27,12 @@ module.exports = {
         loaders
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                drop_debugger: false
-            }
-        }),
+        // new webpack.optimize.UglifyJsPlugin({ // correct
+        //     sourceMap: true,
+        //     compress: {
+        //         drop_debugger: false
+        //     }
+        // }),
         new ExtractTextPlugin('styles.css'),
         new HtmlPlugin({
             title: 'Main Homework',
@@ -41,9 +41,9 @@ module.exports = {
         }),
         new HtmlPlugin({
             title: 'Div Drag And Drop',
-            template: 'towns.hbs',
-            filename: 'towns.html',
-            chunks: ['towns']
+            template: 'dnd.hbs',
+            filename: 'dnd.html',
+            chunks: ['dnd']
         }),
         new CleanWebpackPlugin(['dist'])
     ]

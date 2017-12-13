@@ -1,52 +1,50 @@
-/* ДЗ 6.1 - Асинхронность и работа с сетью */
+/* ДЗ 7.1 - BOM */
 
 /**
- * Функция должна создавать Promise, который должен быть resolved через seconds секунду после создания
+ * Функция должна создавать окно с указанным именем и размерами
  *
- * @param {number} seconds - количество секунд, через которое Promise должен быть resolved
- * @return {Promise}
+ * @param {number} name - имя окна
+ * @param {number} width - ширина окна
+ * @param {number} height - высота окна
+ * @return {Window}
  */
-function delayPromise(seconds) {
-	seconds *=1000;
-	return new Promise(function(resolve) {
-		setTimeout(() => {
-			resolve();
-		}, seconds);
-
-	});
+function createWindow(name, width, height) {
+	 var open = window.open('', name, 'height='+height+', width='+width+'');
+ return open;
 }
 
 /**
- * Функция должна вернуть Promise, который должен быть разрешен массивом городов, загруженным из
- * https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
- * Элементы полученного массива должны быть отсортированы по имени города
+ * Функция должна закрывать указанное окно
  *
- * @return {Promise<Array<{name: String}>>}
+ * @param {Window} window - окно, размер которого надо изменить
  */
-function loadAndSortTowns() {
-	return new Promise((resolve, reject) => {
-		const xhr = new XMLHttpRequest();
-		xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
-		xhr.send();
-		xhr.responseType = 'json';
-		xhr.addEventListener('load', () => {
-			if (xhr.status === 404) {
-				reject();
-			} else {
-				resolve(xhr.response.sort(function(a, b) {
-					if (a.name > b.name) {
-						return 1;
-					}
-					if (a.name < b.name) {
-						return -1;
-					}
-					return 0;
-				}));
-			}
-		});
-	});
+function closeWindow(window) {
+	window.close();
 }
+
+/**
+ * Функция должна создавать cookie с указанными именем и значением
+ *
+ * @param name - имя
+ * @param value - значение
+ */
+function createCookie(name, value) {
+	document.cookie = ''+name+' ='+value+'';
+}
+
+/**
+ * Функция должна удалять cookie с указанным именем
+ *
+ * @param name - имя
+ */
+function deleteCookie(name) {
+var date = new Date(0);
+document.cookie = `${name}=;path=/;expires=${date.toUTCString()}`;
+}
+
 export {
-    delayPromise,
-    loadAndSortTowns
+    createWindow,
+    closeWindow,
+    createCookie,
+    deleteCookie
 };
