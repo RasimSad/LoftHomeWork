@@ -9,9 +9,9 @@
 function createDivWithText(text) {
 	var div = document.createElement('DIV');
 
-    div.innerText = text;
+	div.innerText = text;
 
-    return div;
+	return div;
 }
 
 /**
@@ -23,9 +23,9 @@ function createDivWithText(text) {
 function createAWithHref(hrefValue) {
 	var link = document.createElement('a');
 
-    link.href = hrefValue;
+	link.href = hrefValue;
 
-    return link;
+	return link;
 }
 
 /**
@@ -53,16 +53,16 @@ function prepend(what, where) {
  * т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
-	    var child = where.children,
-        arr = [];
+	var child = where.children,
+		arr = [];
 
-    for (var i = 0; i < child.length; i++) {
-        if (child[i].nodeName === 'P') {
-            arr.push(child[i - 1]);
-        }
-    }
+	for (var i = 0; i < child.length; i++) {
+		if (child[i].nodeName === 'P') {
+			arr.push(child[i - 1]);
+		}
+	}
 
-    return arr;
+	return arr;
 }
 
 /**
@@ -74,16 +74,16 @@ function findAllPSiblings(where) {
  * @return {Array<string>}
  */
 function findError(where) {
-    var result = [];
+	var result = [];
 
-    for (var i = 0; i < where.childNodes.length; i++) {
-        if (where.childNodes[i].nodeType === 1) {
-            result.push(where.childNodes[i].innerText);
-        }
+	for (var i = 0; i < where.childNodes.length; i++) {
+		if (where.childNodes[i].nodeType === 1) {
+			result.push(where.childNodes[i].innerText);
+		}
 
-    }
+	}
 
-    return result;
+	return result;
 }
 
 /**
@@ -100,16 +100,16 @@ function findError(where) {
  * должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
-	    var child = where.childNodes;
+	var child = where.childNodes;
 
-    for (var i = 0; i < child.length; i++) {
-        if (child[i].nodeType === 3) {
-            child[i].parentNode.removeChild(child[i]);
-        }
+	for (var i = 0; i < child.length; i++) {
+		if (child[i].nodeType === 3) {
+			child[i].parentNode.removeChild(child[i]);
+		}
 
-    }
+	}
 
-    return where;
+	return where;
 }
 
 /**
@@ -124,15 +124,15 @@ function deleteTextNodes(where) {
  */
 function deleteTextNodesRecursive(where) {
 
-    for (var i = 0; i < where.childNodes.length; i++) {
-        var child = where.childNodes[i];
-        if (child.nodeType === 3) {
-            where.removeChild(child);
-            i--;
-        } else {
-            deleteTextNodesRecursive(child);
-        }
-    }
+	for (var i = 0; i < where.childNodes.length; i++) {
+		var child = where.childNodes[i];
+		if (child.nodeType === 3) {
+			where.removeChild(child);
+			i--;
+		} else {
+			deleteTextNodesRecursive(child);
+		}
+	}
 }
 
 /**
@@ -159,41 +159,41 @@ function deleteTextNodesRecursive(where) {
  */
 function collectDOMStat(root) {
 	var child = root,
-        obj = {},
-        clas = {},
-        tag = {},
-        text = 0;
-    var childNodes = root.childNodes;
+		obj = {},
+		clas = {},
+		tag = {},
+		text = 0;
+	var childNodes = root.childNodes;
 
-    function texts(child) {
-        for (var i = 0; i < child.length; i++) {
-            if (child[i].nodeType === 3) {
-                text++;
-            } else {
-                if ([child[i].tagName] in tag) {
-                    tag[child[i].tagName]++;
-                } else {
-                    tag[child[i].tagName] = 1;
-                }
-               var className = child[i].classList;
+	function texts(child) {
+		for (var i = 0; i < child.length; i++) {
+			if (child[i].nodeType === 3) {
+				text++;
+			} else {
+				if ([child[i].tagName] in tag) {
+					tag[child[i].tagName]++;
+				} else {
+					tag[child[i].tagName] = 1;
+				}
+				var className = child[i].classList;
 
-                for (var a = 0; a < className.length; a++) {
-                    if (className[a] in clas) {
-                        clas[className[a]]++;
-                    } else {
-                        clas[className[a]] = 1;
-                    }
-                }
+				for (var a = 0; a < className.length; a++) {
+					if (className[a] in clas) {
+						clas[className[a]]++;
+					} else {
+						clas[className[a]] = 1;
+					}
+				}
 
-                texts(child[i].childNodes);
-            }
-        }
-        obj.classes = clas; 
-        obj.tags = tag;
-        obj.texts = text;
-        return obj;
-    }
-    return texts(childNodes);
+				texts(child[i].childNodes);
+			}
+		}
+		obj.classes = clas;
+		obj.tags = tag;
+		obj.texts = text;
+		return obj;
+	}
+	return texts(childNodes);
 }
 
 /**
@@ -230,18 +230,18 @@ function collectDOMStat(root) {
 function observeChildNodes(where, fn) {
 	var callback = function(allmutations) {
 			allmutations.forEach(function(mr) {
-			           if (mr.addedNodes.length > 0) {
-                        var insert = {};
-                        insert.type = 'insert';
-                        insert.nodes = [...mr.addedNodes];
-                        fn(insert);
-                }
-                if (mr.removedNodes.length > 0) {
-                    var remove = {};
-                    remove.type = 'remove';
-                    remove.nodes = [...mr.removedNodes];
-                    fn(remove);
-                }
+				if (mr.addedNodes.length > 0) {
+					var insert = {};
+					insert.type = 'insert';
+					insert.nodes = [...mr.addedNodes];
+					fn(insert);
+				}
+				if (mr.removedNodes.length > 0) {
+					var remove = {};
+					remove.type = 'remove';
+					remove.nodes = [...mr.removedNodes];
+					fn(remove);
+				}
 			});
 		},
 		mo = new MutationObserver(callback),
