@@ -158,7 +158,7 @@ function deleteTextNodesRecursive(where) {
  * }
  */
 function collectDOMStat(root) {
-	    child = root,
+	var child = root,
         obj = {},
         clas = {},
         tag = {},
@@ -175,7 +175,7 @@ function collectDOMStat(root) {
                 } else {
                     tag[child[i].tagName] = 1;
                 }
-                className = child[i].classList;
+               var className = child[i].classList;
 
                 for (var a = 0; a < className.length; a++) {
                     if (className[a] in clas) {
@@ -188,9 +188,9 @@ function collectDOMStat(root) {
                 texts(child[i].childNodes);
             }
         }
-        obj.class = clas;
-        obj.text = text;
+        obj.classes = clas; 
         obj.tags = tag;
+        obj.texts = text;
         return obj;
     }
     return texts(childNodes);
@@ -228,31 +228,29 @@ function collectDOMStat(root) {
  * }
  */
 function observeChildNodes(where, fn) {
-    var callback = function(allmutations) {
-            allmutations.map(function(mr) {
-                if (mr.addedNodes.length > 0) {
-                  var add = [];
-                    add.push(mr.previousSibling.tagName);
-
-                   fn('insert', add);
+	var callback = function(allmutations) {
+			allmutations.forEach(function(mr) {
+			           if (mr.addedNodes.length > 0) {
+                        var insert = {};
+                        insert.type = 'insert';
+                        insert.nodes = [...mr.addedNodes];
+                        fn(insert);
                 }
                 if (mr.removedNodes.length > 0) {
-                  var del = [];
-                    del.push(mr.removedNodes[0].tagName);
-                    
-                   fn('remove', del);
+                    var remove = {};
+                    remove.type = 'remove';
+                    remove.nodes = [...mr.removedNodes];
+                    fn(remove);
                 }
-            });
-
-        },
-        mo = new MutationObserver(callback),
-        options = {
-            'childList': true,
-            'subtree': true
-        }
-    return mo.observe(where, options);
+			});
+		},
+		mo = new MutationObserver(callback),
+		options = {
+			'childList': true,
+			'subtree': true
+		}
+	return mo.observe(where, options);
 }
-
 export {
     createDivWithText,
     createAWithHref,
