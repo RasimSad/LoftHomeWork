@@ -229,28 +229,29 @@ function collectDOMStat(root) {
  */
 function observeChildNodes(where, fn) {
 	var callback = function(allmutations) {
-			allmutations.forEach(function(mr) {
-				if (mr.addedNodes.length > 0) {
-					var insert = {};
-					insert.type = 'insert';
-					insert.nodes = [...mr.addedNodes];
-					fn(insert);
-				}
-				if (mr.removedNodes.length > 0) {
-					var remove = {};
-					remove.type = 'remove';
-					remove.nodes = [...mr.removedNodes];
-					fn(remove);
-				}
-			});
-		},
-		mo = new MutationObserver(callback),
-		options = {
-			'childList': true,
-			'subtree': true
-		}
-	return mo.observe(where, options);
+		allmutations.forEach(function(mr) {
+			if (mr.addedNodes.length > 0) {
+				var insert = {};
+				insert.type = 'insert';
+				insert.nodes = [...mr.addedNodes];
+				fn(insert);
+			}
+			if (mr.removedNodes.length > 0) {
+				var remove = {};
+				remove.type = 'remove';
+				remove.nodes = [...mr.removedNodes];
+				fn(remove);
+			}
+		});
+	},
+	mo = new MutationObserver(callback),
+	options = {
+		'childList': true,
+		'subtree': true
+	}
+return mo.observe(where, options);
 }
+
 export {
     createDivWithText,
     createAWithHref,
