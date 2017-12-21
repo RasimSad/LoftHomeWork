@@ -8,10 +8,12 @@
     <script src="http://vk.com/js/api/openapi.js" type="text/javascript"></script>
 </head>
 <body>
+<div id="wrap">
 <div id="container">
     <div id="header">
         <div id="top">
-            <h1>Выберите друзей</h1>
+            <span>Выберите друзей</span>
+            <input type="image" src="close.png" class="close" id="close">
         </div>
     </div>
     <div id="main">
@@ -28,7 +30,7 @@
     </div>
     <div class="column" id="list">
         <div class="column-top" >
-            <input type="text" class="input" id="name2" placeholder="Название">
+            <input type="text" class="input" id="name2" placeholder="Начните вводить имя друга">
         </div>
         <div class="content">
             <span>Друзья в списке</span>     
@@ -39,13 +41,12 @@
     </div>
 </div>
     <div id="bottom">
-<button>Сохранить</button>
+<button id="save">Сохранить</button>
     </div>
 
         
-    
+   </div> 
 </div>
-
 <script id="user-template" type="text/x-handlebars-template">
       {{#each items}}
 	  <div class="friend myFriends" id="{{id}}">

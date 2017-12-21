@@ -1,10 +1,7 @@
-// 1) регистрация приложения -> получение api id
-// 2) авторизоваться на сайте
-//   - открыть окно с запросом прав
-//   - разрешить выполнять действия от нашего имени
-var nameFrends = document.querySelector('#name');
-var nameList = document.querySelector('#name2');
-var friends = [];
+var nameFrends = document.querySelector('#name'),
+	nameList = document.querySelector('#name2'),
+	friends = [];
+
 VK.init({
 	apiId: 6301007
 });
@@ -35,6 +32,13 @@ function callAPI(method, params) {
 	})
 }
 
+function saveLS(friends, list) {
+	localStorage.removeItem('friends');
+	localStorage.removeItem('list');
+	localStorage.friends = JSON.stringify(friends);
+	localStorage.list = JSON.stringify(list);
+}
+
 function PrintFriends(friend, list) {
 	let friendsList = document.getElementById('friendsList'),
 		result = document.getElementById('result'),
@@ -46,22 +50,26 @@ function PrintFriends(friend, list) {
 		html2 = render2(list);
 	result.innerHTML = html;
 	friendsList.innerHTML = html2;
+
 	for (let b = 0; b < friend.items.length; b++) {
 		let filter = document.getElementById(friend.items[b].id);
 		filter.style.display = 'block';
-		if (!isMatching(friend.items[b].first_name, nameFrends.value)) {
+		let str = friend.items[b].first_name + ' ' + friend.items[b].last_name;
+
+		if (!isMatching(str, nameFrends.value)) {
 			filter.style.display = 'none';
 		}
 	}
+
 	for (let b = 0; b < list.items.length; b++) {
 		let filter = document.getElementById(list.items[b].id);
 		filter.style.display = 'block';
-		if (!isMatching(list.items[b].first_name, nameList.value)) {
+		let str2 = list.items[b].first_name + ' ' + list.items[b].last_name;
+		if (!isMatching(str2, nameList.value)) {
 			filter.style.display = 'none';
 		}
 	}
 }
-
 
 function isMatching(full, chunk) {
 	if ((full.toLowerCase().indexOf(chunk.toLowerCase())) !== -1) {
@@ -71,25 +79,34 @@ function isMatching(full, chunk) {
 	}
 }
 
-
 (async () => {
 	try {
 		await auth();
+		if ((localStorage.friends) && (localStorage.list.length)) {
+			friends = JSON.parse(localStorage.friends);
+			list2 = JSON.parse(localStorage.list);
+			var list = list2.items;
+			PrintFriends(friends, list2)
 
-		friends = await callAPI('friends.get', {
-			fields: 'city,country, photo_100'
-		});
-		const template = document.querySelector('#user-template').textContent;
-		const render = Handlebars.compile(template);
-		const html = render(friends);
-		const results = document.querySelector('#result');
-		const friendsList = document.querySelector('#friendsList');
-		var friend = document.getElementById("myfriends");
-		var myList = document.getElementById("list");
-		var main = document.getElementById("main");
-		var list = [];
-		var list2 = [];
-		results.innerHTML = html;
+		} else {
+			friends = await callAPI('friends.get', {
+				fields: 'city,country, photo_100'
+			});
+			var template = document.querySelector('#user-template').textContent,
+				render = Handlebars.compile(template),
+				html = render(friends),
+				results = document.querySelector('#result'),
+				list = [],
+				list2 = {};
+				results.innerHTML = html;
+			
+		}
+		var friendsList = document.querySelector('#friendsList'),
+			friend = document.getElementById("myfriends"),
+			myList = document.getElementById("list"),
+			main = document.getElementById("main"),
+			saiv = document.getElementById("save"),
+			close = document.getElementById("close");
 		result.addEventListener('click', function(e) {
 			if (e.target.className == 'plus') {
 				for (var i = 0; i < friends.items.length; i++) {
@@ -101,7 +118,6 @@ function isMatching(full, chunk) {
 				list2['items'] = list;
 				PrintFriends(friends, list2);
 			}
-
 		})
 		friendsList.addEventListener('click', function(e) {
 			if (e.target.className == 'remove') {
@@ -110,68 +126,78 @@ function isMatching(full, chunk) {
 						friends.items.push(list2.items[a]);
 						list2.items.splice(a, 1);
 						PrintFriends(friends, list2);
+						saveLS(friends, list2);
 					}
 				}
 			}
-
 		})
 		nameFrends.addEventListener('keyup', function() {
 			PrintFriends(friends, list2);
-
 		})
-
 		nameList.addEventListener('keyup', function() {
 			PrintFriends(friends, list2);
 		})
-
+		saiv.addEventListener('click', function() {
+			saveLS(friends, list2)
+		})
+		
+		close.addEventListener('click', function() {
+			let content = document.getElementById("container");
+			content.style.display = 'none';
+		})
 		friend.addEventListener('mousedown', function(e) {
-            //console.log(e.target.tagName);
-			if (!e.target.tagName == 'INPUT'){
-				console.log('INPUT');
-			
-			if (e.target.tagName == 'DIV'){
-				console.log('DIV');
-			}}
-
+			console.log(e.target.className);
+			if ((e.target.tagName == 'INPUT') || (e.target.className == 'friends style-3') || (e.target.className == 'content left')) {
+				return;
+			}
 			if (e.target.tagName == 'DIV') {
 				var block = e.target;
 			} else {
 				var block = e.target.parentNode;
 			}
+			var coords = getCoords(block),
+				shiftX = e.pageX - coords.left,
+				shiftY = e.pageY - coords.top;
+
 			function move(e) {
-				block.style.left = e.pageX - block.offsetWidth / 2 + 'px';
-				block.style.top = e.pageY - block.offsetHeight / 2 + 'px';
+				block.style.left = e.pageX - shiftX + 'px';
+				block.style.top = e.pageY - shiftY + 'px';
 			}
+
+			function getCoords(elem) {
+				var box = elem.getBoundingClientRect();
+				return {
+					top: box.top + pageYOffset,
+					left: box.left + pageXOffset
+				};
+			}
+
 			block.style.position = 'absolute';
 			block.style.zIndex = 1000;
 			move(e);
+
 			document.onmousemove = function(e) {
 				move(e);
 			}
+
 			block.onmouseup = function(e) {
 				let BlockCoord = block.getBoundingClientRect();
 				let ListCoord = myList.getBoundingClientRect();
-				if ((BlockCoord.top > ListCoord.top-10) && (BlockCoord.bottom < ListCoord.bottom+10) && (BlockCoord.left > ListCoord.left-10) && (BlockCoord.right < ListCoord.right+10)){
+				if ((BlockCoord.top > ListCoord.top - 10) && (BlockCoord.bottom < ListCoord.bottom + 10) && (BlockCoord.left > ListCoord.left - 10) && (BlockCoord.right < ListCoord.right + 10)) {
 					console.log(block.id);
-						for (var i = 0; i < friends.items.length; i++) {
-					if (friends.items[i].id == block.id) {
-						list.push(friends.items[i]);
-						list2['items'] = list;
-						friends.items.splice(i, 1);
+					for (var i = 0; i < friends.items.length; i++) {
+						if (friends.items[i].id == block.id) {
+							list.push(friends.items[i]);
+							list2['items'] = list;
+							friends.items.splice(i, 1);
+						}
 					}
+					PrintFriends(friends, list2);
+				} else {
+					block.style.position = '';
 				}
-				PrintFriends(friends, list2);
-				}
-				else {
-                    block.style.position = ''; 
-				}
-				
 			}
-
-
-//}
 		})
-
 	} catch (e) {
 		console.error(e);
 	}
