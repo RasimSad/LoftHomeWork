@@ -1,0 +1,142 @@
+body {
+  font-family: Helvetica;
+}
+h1 {
+  font-size: 18px;
+}
+h2 {
+  font-size: 14px;
+}
+#container{
+  width: 611px;
+  border-radius: 20px;
+  height: 495px;
+}
+#top{
+  background-color: #ff8663;
+  color: #ffffff;
+  font-size: 16px;
+  padding-left: 15px;
+  height: 45px;
+  padding-top: 17px;
+  border-radius: 20px 20px 0 0;
+}
+#main {
+  height: 400px;
+}
+
+#bottom{
+  height: 45px;
+  background-color: #f0f0f0;
+  border-radius: 0 0 20px 20px;
+  clear: both;
+}
+.column {
+  height: 400px;
+  display: inline-block;
+  width: 305px;
+  float: left;
+}
+.column-left {
+  border-right: 1px solid #f0f0f0;
+}
+.column-top {
+  height: 38px;
+  background-color: #f0f0f0;
+  padding-top: 9px;
+}
+.input {
+  background-image: url(search.png);
+  background-repeat: no-repeat;
+  background-position: 3% 50%;
+  height: 25px;
+  border-radius: 12px;
+  width: 250px;
+  border: none;
+  padding-left: 30px;
+}
+input:focus{
+  outline:none;
+}
+#name {
+  margin-left: 18px;
+}
+#name2 {
+  margin-left: 7px;
+}
+.content{
+  padding-top:15px;
+  padding-left: 7px;
+  padding-right: 15px;
+}
+.left {
+  padding-left: 18px;
+  padding-right: 7px
+}
+.content span{
+  display: block;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 6px;
+  margin-right: 5px;
+}
+.friends {
+  overflow-y: scroll;
+  height: 300px;
+}
+.photo{
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.friend p{
+  vertical-align: middle;
+  display: inline-block;
+  font-size: 12px;
+  margin:0;
+  width: 184px;
+}
+.friend {
+  line-height: 61px;
+  overflow: hidden;
+  padding: 0 6px 3px 6px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-right: 5px;
+}
+.style-3::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: none;
+  background-color: #ffffff;
+}
+
+.style-3::-webkit-scrollbar
+{
+  width: 3px;
+  background-color: #c4c4c4;
+}
+
+.style-3::-webkit-scrollbar-thumb
+{
+  background-color: #c4c4c4;
+}
+.remove, .plus{
+  width: 17px;
+  height: 17px;
+  vertical-align: middle;
+  display: inline-block;
+}
+#bottom button {
+  width: 88px;
+  height: 30px;
+  background-color: #ff8663;
+  border:none;
+  border-radius: 11px;
+  float: right;
+  color: #ffffff;
+  margin-top: 7px;
+  margin-right: 8px;
+}
+#bottom button:focus{
+  outline:none;
+}
