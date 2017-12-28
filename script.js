@@ -32,17 +32,27 @@ new Promise(resolve => ymaps.ready(resolve))
                 hideIconOnBalloonOpen: false
             });
             clusterer.add(myPlacemark);
-            open(e);
-            getAddress(coords);
-            let adr = adres.innerHTML;
-            print(array, adr);
 
-            myPlacemark.events.add('click', function(e) {
+            var myGeocoder = ymaps.geocode(coords);
+            myGeocoder.then(function(res) {
+                var nearest = res.geoObjects.get(0);
+                var name = nearest.getAddressLine();
+                //console.log(name);
+                print(array, name);
                 open(e);
-                let coords2 = e.get('coords'),
-                    adr = adres.innerHTML;
-                getAddress(coords2);
-                print(array, adr);
+            });
+
+
+            myPlacemark.events.add('click', function(event) {
+                let coords2 = event.get('coords');
+                var myGeocoder2 = ymaps.geocode(coords2);
+                myGeocoder2.then(function(res) {
+                    var nearest2 = res.geoObjects.get(0);
+                    var name2 = nearest.getAddressLine();
+                    print(array, name2);
+                    open(event);
+                })
+
             });
         });
 
@@ -68,24 +78,27 @@ new Promise(resolve => ymaps.ready(resolve))
 
                 array.push(obj);
                 print(array, adr);
+                console.log(array);
             }
             if (e.target.id == 'close') {
                 container.style.display = 'none';
                 let adr = adres.innerHTML;
-                if (!remove(array, adr)){
+                if (!remove(array, adr)) {
                     clusterer.remove(myPlacemark);
                 }
 
             }
         })
     })
-function remove (arr, address){
+
+function remove(arr, address) {
     for (var i = 0; i < arr.length; i++) {
-        if (arr[i].userAddress == address){
+        if (arr[i].userAddress == address) {
             return true;
         }
     }
 }
+
 function open(e) {
     container.style.display = 'block';
     let top = e.get('position')[1] + 'px',
@@ -95,8 +108,10 @@ function open(e) {
 }
 
 function print(arr, address) {
-var result = document.getElementById('content');
- let arr2 = [];
+    var adress = document.getElementById('adres');
+    adress.innerHTML = address;
+    var result = document.getElementById('content');
+    let arr2 = [];
     if (arr.length > 0) {
         for (var i = 0; i < arr.length; i++) {
             if (arr[i].userAddress == address) {
@@ -122,7 +137,7 @@ var result = document.getElementById('content');
     } else {
         result.innerHTML = 'Пока нет ни одного отзыва';
     }
-  
+
 }
 
 function getAddress(coord) {
@@ -137,8 +152,8 @@ function getAddress(coord) {
             .set({
                 balloonContent: name
             });
-    return(adr);
+        return (adr);
 
     });
-    
+
 }
