@@ -5,7 +5,7 @@ new Promise(resolve => ymaps.ready(resolve))
     .then(() => {
         myMap = new ymaps.Map('map', {
             center: [55.753994, 37.622093],
-            zoom: 9
+            zoom: 16
         }, {
             searchControlProvider: 'yandex#search'
         });
@@ -13,7 +13,8 @@ new Promise(resolve => ymaps.ready(resolve))
         clusterer = new ymaps.Clusterer({
             preset: 'islands#invertedVioletClusterIcons',
             clusterDisableClickZoom: true,
-            openBalloonOnClick: true
+            openBalloonOnClick: true,
+            clusterBalloonContentLayout: 'cluster#balloonCarousel'
         });
 
         myMap.geoObjects.add(clusterer);
@@ -21,22 +22,30 @@ new Promise(resolve => ymaps.ready(resolve))
         myMap.events.add('click', function(e) {
             var content = document.getElementById('content');
             content.innerHTML = '';
-            var coords = e.get('coords');
+            let coords = e.get('coords');
             myPlacemark = new ymaps.Placemark(coords, {
-            preset: 'islands#violetDotIconWithCaption',
-            iconColor: '#0095b6',
+                preset: 'islands#violetDotIconWithCaption',
+                iconColor: '#0095b6',
             }, {
-            balloonCloseButton: true,
-            hideIconOnBalloonOpen: false
+                balloonCloseButton: true,
+                openBalloonOnClick: false,
+                hideIconOnBalloonOpen: false
             });
             clusterer.add(myPlacemark);
-            container.style.display = 'block';
-            let top = e.get('position')[1] + 'px',
-                left = e.get('position')[0] + 'px';
-            container.style.top = e.get('position')[1] + 'px';
-            container.style.left = e.get('position')[0] + 'px';
+            open(e);
             getAddress(coords);
+            let adr = adres.innerHTML;
+            print(array, adr);
+
+            myPlacemark.events.add('click', function(e) {
+                open(e);
+                let coords2 = e.get('coords'),
+                    adr = adres.innerHTML;
+                getAddress(coords2);
+                print(array, adr);
+            });
         });
+
 
         var container = document.getElementById('container');
 
@@ -49,9 +58,9 @@ new Promise(resolve => ymaps.ready(resolve))
                     adr = adres.innerHTML;
 
                 obj.userAddress = adres.innerHTML,
-                obj.userName = userName.value,
-                obj.userPlace = userPlace.value,
-                obj.userText = userText.value;
+                    obj.userName = userName.value,
+                    obj.userPlace = userPlace.value,
+                    obj.userText = userText.value;
 
                 document.getElementById('name').value = '';
                 document.getElementById('place').value = '';
@@ -62,49 +71,74 @@ new Promise(resolve => ymaps.ready(resolve))
             }
             if (e.target.id == 'close') {
                 container.style.display = 'none';
+                let adr = adres.innerHTML;
+                if (!remove(array, adr)){
+                    clusterer.remove(myPlacemark);
+                }
+
             }
         })
-
-
-
     })
-
-function print(arr, address) {
-    let arr2 = [];
+function remove (arr, address){
     for (var i = 0; i < arr.length; i++) {
-        if (arr[i].userAddress == address) {
-            arr2.push(arr[i]);
+        if (arr[i].userAddress == address){
+            return true;
         }
     }
-    let template = document.querySelector('#user-template').textContent,
-        render = Handlebars.compile(template),
-        result = document.getElementById('content');
-    result.innerHTML = '';
-    html = render({
-        arr2: arr2
-    });
-    result.innerHTML = html;
+}
+function open(e) {
+    container.style.display = 'block';
+    let top = e.get('position')[1] + 'px',
+        left = e.get('position')[0] + 'px';
+    container.style.top = e.get('position')[1] + 'px';
+    container.style.left = e.get('position')[0] + 'px';
 }
 
+function print(arr, address) {
+var result = document.getElementById('content');
+ let arr2 = [];
+    if (arr.length > 0) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].userAddress == address) {
+                arr2.push(arr[i]);
+            }
+            ///  myPlacemark.properties
+            //    .set({
+            //        balloonContentHeader: arr[i].userAddress,
+            //   });
+        }
+        let template = document.querySelector('#user-template').textContent,
+            render = Handlebars.compile(template);
 
-function createPlacemark(coords) {
-    return new ymaps.Placemark(coords, {
-        preset: 'islands#violetDotIconWithCaption',
-        iconColor: '#0095b6',
-    }, {
-        balloonCloseButton: true,
-        hideIconOnBalloonOpen: false
-    });
-
+        result.innerHTML = '';
+        html = render({
+            arr2: arr2
+        });
+        result.innerHTML = html;
+        // myPlacemark.properties
+        //   .set({
+        //       balloonContent: html,
+        ///   });
+    } else {
+        result.innerHTML = 'Пока нет ни одного отзыва';
+    }
+  
 }
-
 
 function getAddress(coord) {
     var myGeocoder = ymaps.geocode(coord);
+    var adr;
     myGeocoder.then(function(res) {
-            var nearest = res.geoObjects.get(0);
-            var name = nearest.getAddressLine();
-            adres.innerHTML = name;
-        }
-    );
+        var nearest = res.geoObjects.get(0);
+        var name = nearest.getAddressLine();
+        adres.innerHTML = name;
+        adr = name;
+        myPlacemark.properties
+            .set({
+                balloonContent: name
+            });
+    return(adr);
+
+    });
+    
 }
