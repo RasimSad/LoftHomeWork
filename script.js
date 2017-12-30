@@ -1,6 +1,8 @@
 var array = [];
 let myMap;
 let clusterer;
+var content = document.getElementById('content');
+
 new Promise(resolve => ymaps.ready(resolve))
     .then(() => {
         myMap = new ymaps.Map('map', {
@@ -18,77 +20,28 @@ new Promise(resolve => ymaps.ready(resolve))
         });
 
         myMap.geoObjects.add(clusterer);
-
+     
         myMap.events.add('click', function(e) {
-            var content = document.getElementById('content');
-            content.innerHTML = '';
+            console.log('клик по карте!');
+            container.style.display = 'none';
             let coords = e.get('coords');
-            myPlacemark = new ymaps.Placemark(coords, {
-                preset: 'islands#violetDotIconWithCaption',
-                iconColor: '#0095b6',
-            }, {
-                balloonCloseButton: true,
-                openBalloonOnClick: false,
-                hideIconOnBalloonOpen: false
-            });
-            clusterer.add(myPlacemark);
-
-            var myGeocoder = ymaps.geocode(coords);
+            console.log(coords);
+            let myGeocoder = ymaps.geocode(coords);
             myGeocoder.then(function(res) {
-                var nearest = res.geoObjects.get(0);
-                var name = nearest.getAddressLine();
-                //console.log(name);
+                let nearest = res.geoObjects.get(0);
+                let name = nearest.getAddressLine();
                 print(array, name);
                 open(e);
+                 form = document.getElementById("form");
+            form.addEventListener('click', function(event){
+                     console.log(event.target);
+            })
             });
-
-
-            myPlacemark.events.add('click', function(event) {
-                let coords2 = event.get('coords');
-                var myGeocoder2 = ymaps.geocode(coords2);
-                myGeocoder2.then(function(res) {
-                    var nearest2 = res.geoObjects.get(0);
-                    var name2 = nearest.getAddressLine();
-                    print(array, name2);
-                    open(event);
-                })
-
-            });
+           
         });
 
 
-        var container = document.getElementById('container');
 
-        container.addEventListener('click', function(e) {
-            if (e.target.tagName == 'BUTTON') {
-                let obj = {},
-                    userName = document.getElementById('name'),
-                    userPlace = document.getElementById('place'),
-                    userText = document.getElementById('text'),
-                    adr = adres.innerHTML;
-
-                obj.userAddress = adres.innerHTML,
-                    obj.userName = userName.value,
-                    obj.userPlace = userPlace.value,
-                    obj.userText = userText.value;
-
-                document.getElementById('name').value = '';
-                document.getElementById('place').value = '';
-                document.getElementById('text').value = '';
-
-                array.push(obj);
-                print(array, adr);
-                console.log(array);
-            }
-            if (e.target.id == 'close') {
-                container.style.display = 'none';
-                let adr = adres.innerHTML;
-                if (!remove(array, adr)) {
-                    clusterer.remove(myPlacemark);
-                }
-
-            }
-        })
     })
 
 function remove(arr, address) {
