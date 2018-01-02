@@ -51,10 +51,10 @@ html, body, #map {
 }
 .name {
 	color: #4f4f4f;
-	font-weight: 600;
 }
 .place {
 	margin-left: 10px;
+	font-family: "FiraLight";
 }
 .otziv p{
 	margin: 5px 0;
@@ -98,4 +98,26 @@ html, body, #map {
 }
 .clear {
 	clear: none;
+}
+.userText {
+	font-size: 32px;
+}
+.date {
+	margin-top: 20px;
+}
+.ballon_header {
+    height: 20px;
+    font-size: 15px;
+}
+
+.ballon_address {
+      height: 20px;
+}
+.ballon_text {
+      height: 60px;
+}
+.ballon_footer {
+	display: block;
+	margin-top: 10px;
+	text-align: right;
 }
