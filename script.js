@@ -22,6 +22,12 @@ new Promise(resolve => ymaps.ready(resolve))
             test.addEventListener('click', (e) => {
                 console.log(e.target.innerHTML);
                 print(array, e.target.innerHTML);
+                console.log(array);
+                for (var a = 0; a < array.length; a ++){
+                    if (array[a].userAddress == e.target.innerHTML) {
+                       coordinate = array[a].coords; 
+                    }
+                }
                 open2(e);
                 myMap.balloon.close();
             })
@@ -79,6 +85,7 @@ new Promise(resolve => ymaps.ready(resolve))
                     obj.userName = userName.value,
                     obj.userPlace = userPlace.value,
                     obj.userText = userText.value;
+                    obj.coords = coordinate;
 
                 document.getElementById('name').value = '';
                 document.getElementById('place').value = '';
