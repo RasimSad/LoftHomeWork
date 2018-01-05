@@ -15,7 +15,18 @@ new Promise(resolve => ymaps.ready(resolve))
          MyBalloonLayout = ymaps.templateLayoutFactory.createClass('<h2 class=ballon_header>{{properties.balloonContentHeader|raw }}</h2>' +
     '<div class=ballon_address><a href="#" id="link">{{properties.balloonContentAddress|raw }}</a></div>' +
     '<div class=ballon_text>{{properties.balloonContentText|raw }}</div>' +
-    '<div class=ballon_footer>{{properties.balloonContentFooter|raw }}</div>');
+    '<div class=ballon_footer>{{properties.balloonContentFooter|raw }}</div>', {
+        build: function () {
+            MyBalloonLayout.superclass.build.call(this);
+            let test =document.getElementById('link');
+            test.addEventListener('click', (e) => {
+                console.log(e.target.innerHTML);
+                print(array, e.target.innerHTML);
+                open2(e);
+                myMap.balloon.close();
+            })
+        }
+    });
 
         clusterer = new ymaps.Clusterer({
             preset: 'islands#invertedVioletClusterIcons',
@@ -47,8 +58,8 @@ new Promise(resolve => ymaps.ready(resolve))
 
 
                 myPlacemark.events.add('click', function(events) {
-                    let coords2 = events.get('coords');
-                    var myGeocoder2 = new ymaps.geocode(coords2);
+                    coordinate = events.get('coords');
+                    var myGeocoder2 = new ymaps.geocode(coordinate);
                     myGeocoder2.then(function(result) {
                             var nearest2 = result.geoObjects.get(0);
                             var name2 = nearest2.getAddressLine();
@@ -120,9 +131,14 @@ function open(e) {
         form = document.getElementById("form");
     container.style.top = e.get('position')[1] + 'px';
     container.style.left = e.get('position')[0] + 'px';
-
-
 }
+
+function open2(e) {
+    container.style.display = 'block';
+    container.style.top = event.clientY + 'px';
+    container.style.left = event.clientX + 'px';
+}
+
 
 function print(arr, address) {
     var adress = document.getElementById('adres');
